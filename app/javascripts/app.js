@@ -31,7 +31,7 @@ function sendAmount() {
 
   setStatus("Initiating transaction... (please wait)");
 
-  web3.eth.sendTransaction({from: account, to: splitter.address, value: amount}, function(error, result){
+  /*web3.eth.sendTransaction({from: account, to: splitter.address, value: amount}, function(error, result){
     if(!error) {
       console.log(result);
       
@@ -47,7 +47,17 @@ function sendAmount() {
       console.error(e);
       setStatus("Error sending coin; see log.");
     } 
+  });*/
+
+  setStatus("Initiating transaction... (please wait)");
+  splitter.sendAmount({from: account, value: amount}).then(function() {
+    setStatus("Transaction complete!");
+    refreshBalances();
+  }).catch(function(e) {
+    console.log(e);
+    setStatus("Error sending coin; see log.");
   });
+
 };
 
 window.onload = function() {
