@@ -39,6 +39,9 @@ function sendAmount() {
         console.log(receipt);
         setStatus("Transaction complete!");
         refreshBalances();
+      }).catch(function(e) {
+        console.error(e);
+        setStatus("Error sending coin; see log.");
       });      
     } else {
       console.error(e);
