@@ -13,12 +13,12 @@ function refreshBalances() {
   contract_address_element.innerHTML = splitter.address;
 
   var contract_balance_element = document.getElementById("balance");
-  contract_balance_element.innerHTML = web3.eth.getBalance(splitter.address);
+  contract_balance_element.innerHTML = web3.fromWei(web3.eth.getBalance(splitter.address), 'ether');
 
   splitter.getAccountA.call().then(function(result) {
     console.log("Account A: " + result);
     var accountA_balance_element = document.getElementById("balanceA");
-    accountA_balance_element.innerHTML = web3.eth.getBalance(result);
+    accountA_balance_element.innerHTML = web3.fromWei(web3.eth.getBalance(result), 'ether');
   }).catch(function(e){
     console.error(e);
   });
@@ -26,7 +26,7 @@ function refreshBalances() {
   splitter.getAccountB.call().then(function(result) {
     console.log("Account B: " + result);
     var accountB_balance_element = document.getElementById("balanceB");
-    accountB_balance_element.innerHTML = web3.eth.getBalance(result);
+    accountB_balance_element.innerHTML = web3.fromWei(web3.eth.getBalance(result), 'ether');
   }).catch(function(e){
     console.error(e);
   })
@@ -52,7 +52,7 @@ function sendAmount() {
         setStatus("Error sending coin; see log.");
       });      
     } else {
-      console.error(e);
+      console.error(error);
       setStatus("Error sending coin; see log.");
     } 
   });
