@@ -1,7 +1,5 @@
 var accounts;
 var account;
-var accountA;
-var accountB;
 
 function setStatus(message) {
   var status = document.getElementById("status");
@@ -17,21 +15,31 @@ function refreshBalances() {
   var contract_balance_element = document.getElementById("balance");
   contract_balance_element.innerHTML = web3.eth.getBalance(splitter.address);
 
-  var accountA_balance_element = document.getElementById("balanceA");
-  accountA_balance_element.innerHTML = web3.eth.getBalance(accountA);
-
-  var accountB_balance_element = document.getElementById("balanceB");
-  accountB_balance_element.innerHTML = web3.eth.getBalance(accountB);
+  splitter.getAccountA.call().then(function(result) {
+    console.log("Account A: " + result);
+    var accountA_balance_element = document.getElementById("balanceA");
+    accountA_balance_element.innerHTML = web3.eth.getBalance(result);
+  }).catch(function(e){
+    console.error(e);
+  });
+  
+  splitter.getAccountB.call().then(function(result) {
+    console.log("Account B: " + result);
+    var accountB_balance_element = document.getElementById("balanceB");
+    accountB_balance_element.innerHTML = web3.eth.getBalance(result);
+  }).catch(function(e){
+    console.error(e);
+  })
 };
 
 function sendAmount() {
   var splitter = Splitter.deployed();
 
-  var amount = parseInt(document.getElementById("amount").value);
+  var amount = web3.toWei(parseInt(document.getElementById("amount").value), 'ether');
 
   setStatus("Initiating transaction... (please wait)");
 
-  /*web3.eth.sendTransaction({from: account, to: splitter.address, value: amount}, function(error, result){
+  web3.eth.sendTransaction({from: account, to: splitter.address, value: amount, gas: 50000}, function(error, result){
     if(!error) {
       console.log(result);
       
@@ -47,15 +55,6 @@ function sendAmount() {
       console.error(e);
       setStatus("Error sending coin; see log.");
     } 
-  });*/
-
-  setStatus("Initiating transaction... (please wait)");
-  splitter.sendAmount({from: account, value: amount}).then(function() {
-    setStatus("Transaction complete!");
-    refreshBalances();
-  }).catch(function(e) {
-    console.log(e);
-    setStatus("Error sending coin; see log.");
   });
 
 };
@@ -98,12 +97,6 @@ window.onload = function() {
 
     accounts = accs;
     account = accounts[0];
-    accountA = accounts[1];
-    accountB = accounts[2];
-
-    console.log("Account: " + account);
-    console.log("Account A: " + accountA);
-    console.log("Account B: " + accountB);
 
     refreshBalances();
   });

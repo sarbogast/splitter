@@ -12,25 +12,10 @@ contract Splitter {
 	}
 
 	function () payable {
-		var value = msg.value;
-		var half = value / 2;
-		if(!accountA.send(half)) {
-			throw;
-		}
-		if(!accountB.send(value - half)) {
-			throw;
-		}
-	}
-
-	function sendAmount() payable returns (bool success) {
-		var value = msg.value;
-		var half = value / 2;
-		if(!accountA.send(half) || !accountB.send(value-half)) {
-			return false;
-		}
-		Transfer(msg.sender, accountA, half);
-		Transfer(msg.sender, accountB, value - half);
-		return true;
+		uint256 value = msg.value;
+		uint256 half = value / 2;
+		if(!accountA.send(half)) throw;
+		if(!accountB.send(value - half)) throw;
 	}
 
 	function getAccountA() returns (address addr) {
